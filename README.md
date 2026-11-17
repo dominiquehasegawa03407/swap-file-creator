@@ -36,3 +36,10 @@ The trade-off: there is no rollback. If `mkswap` fails after `fallocate` succeed
 - `parseSizeToBytes(size)` — parses `"1G"`, `"512M"`, `"4096K"`, or a bare byte count. Returns `null` for anything else.
 - `createDefaultDispatcher()` — returns the real `execFileSync`-based dispatcher. Override in tests.
 - `planSwapCommands(dispatcher, path, sizeBytes)` — returns the shell-form command strings.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
